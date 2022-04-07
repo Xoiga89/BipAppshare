@@ -2380,7 +2380,7 @@ _sprintf(prs1, "%d %s", pressure_2(), "hPa");
 text_out(prs1, 10, 120);
 set_fg_color(COLOR_GREEN);
 text_out("Nhiet do gia- C", 10, 140);
-_sprintf(temp, "%d", pressure_1()*75006/100000 - 760 + 23);
+_sprintf(temp, "%d", pressure_1()*29900/101858 - 273);
 text_out(temp, 140, 140);
 shut_down_navi();
 		
@@ -2870,6 +2870,25 @@ https://www.google.com/search?q=predict+weather+with+barometer&oq=predict+weathe
 
 */
 
+
+/*
+https://time.is/Germany
+https://aicurious.io/posts/2016-07-28-toan-tu-trong-c/
+https://www.google.com/search?q=th%E1%BB%9Di+ti%E1%BA%BFt+h%E1%BB%93+ch%C3%AD+minh+qu%E1%BA%ADn+5&oq=th%E1%BB%9Di+ti%E1%BA%BFt+h%E1%BB%93+ch%C3%AD+minh+qu%E1%BA%ADn+5&aqs=chrome..69i57.5699j1j7&sourceid=chrome&ie=UTF-8
+https://www.google.com/search?q=c%C3%A1ch+t%C3%ADnh+ng%C3%A0y+ch%E1%BB%A7+nh%E1%BA%ADt+cu%E1%BB%91i+c%C3%B9ng+c%E1%BB%A7a+th%C3%A1ng&sxsrf=APq-WBvbuXSkf4mMQ-V-JLX29sKyutY1WA%3A1649263105610&ei=AcJNYqX1JNa5hwPI_r6QAg&ved=0ahUKEwjl-bPs7__2AhXW3GEKHUi_DyIQ4dUDCA4&uact=5&oq=c%C3%A1ch+t%C3%ADnh+ng%C3%A0y+ch%E1%BB%A7+nh%E1%BA%ADt+cu%E1%BB%91i+c%C3%B9ng+c%E1%BB%A7a+th%C3%A1ng&gs_lcp=Cgdnd3Mtd2l6EAM6BAghEApKBAhBGABKBAhGGABQAFj3GGCnG2gGcAF4AoABtwGIAfEUkgEEMC4yMZgBAKABAcABAQ&sclient=gws-wiz
+https://www.youtube.com/watch?v=xwuJ-FnikGE
+https://vi.wikipedia.org/wiki/N%C4%83m_nhu%E1%BA%ADn
+https://www.google.com/search?q=how+to+calculate+day+of+week+from+date&oq=how+to+calculate+a+day+to+a+wee&aqs=chrome.1.69i57j0i22i30.20504j0j7&sourceid=chrome&ie=UTF-8
+https://cs.uwaterloo.ca/~alopez-o/math-faq/node73.html#:~:text=For%20a%20Gregorian%20date%2C%20add,7%20and%20take%20the%20remainder.
+https://artofmemory.com/blog/how-to-calculate-the-day-of-the-week/
+https://www.google.com/search?q=nhi%E1%BB%87t+%C4%91%E1%BB%93+h%E1%BB%93+ch%C3%AD+minh&oq=nh&aqs=chrome.0.69i59l3j69i57j0i3j69i61l3.1584j0j7&sourceid=chrome&ie=UTF-8
+https://www.google.com/search?q=winter+time+german+2022&oq=winter+time+german+2022&aqs=chrome..69i57j0i19.14191j1j7&sourceid=chrome&ie=UTF-8
+https://www.timeanddate.com/time/change/germany?year=2022
+https://www.timeanddate.com/date/weekday.html
+
+*/
+
+
 void thegioi1(){  // Lấy giờ Úc (Giờ VN +3) , Đức (Giờ VN -6) , Los Angeles (Giờ VN -15) , London (Giờ VN -7). Ký tự nơi ở sẽ thấy kí tự theo Mã chung ISO và cách 15 px, Giờ + thì > 24, Giờ - thì < 0)
   // Vì lý dó có các nước như Đức, London là có xài thêm giờ mùa đông nên viết lại code như sau
   //Các nước có giờ mùa đông
@@ -2914,6 +2933,22 @@ text_out_center("TONY", 88, 30);
 set_update_period(1, 60000);  
 repaint_screen_lines(0, 176);     
 
+/*
+Theo https://artofmemory.com/blog/how-to-calculate-the-day-of-the-week/
+January = 0
+February = 3
+March = 3
+April = 6
+May = 1
+June = 4
+July = 6
+August = 2
+September = 5
+October = 0
+November = 3
+December = 5
+*/
+
 
   set_bg_color(COLOR_BLACK);
   set_fg_color(COLOR_WHITE);
@@ -2922,17 +2957,66 @@ repaint_screen_lines(0, 176);
   text_out_center("GER: ", 23, 104);
   int GE3;
   GE3 = 31;
-   int GE10;
+   int GE10;	
   GE10 = 31;
+  //https://artofmemory.com/blog/how-to-calculate-the-day-of-the-week/
+  int CC;
+  if ( ( dt.year >= 1900 ) && ( dt.year <= 2000 ) ) {
+	  CC = 0;
+  } else if ( ( dt.year >= 2000 ) && ( dt.year <= 2100 ) ) {
+	  CC = 6;
+  } else if ( ( dt.year >= 2100 ) && ( dt.year <= 2200 ) ) {
+	  CC = 4;
+  } else if ( ( dt.year >= 2200 ) && ( dt.year <= 2300 ) ) {
+	  CC = 2;
+  } else if ( ( dt.year >= 1800 ) && ( dt.year <= 1900 ) ) {
+	  CC = 2;
+  } else if ( ( dt.year >= 2300 ) && ( dt.year <= 2400 ) ) {
+	  CC = 0;
+  }
+  int LY; //Vì cái này dành cho các ngày trong tháng 1 và 2 (Tại tháng 2 bị nhuận) còn các tháng còn lại không bị nên không có trừ 1 ở đây
+  // If the date is in a January or February of a leap year, you have to subtract one from your total before the final step.
+  if ( ( dt.year % 4 == 0 ) && ( dt.year % 100 != 0 ) ){
+	   //LY = -1; Bỏ
+	   LY = 0;
+  } else if ( dt.year % 400 == 0 ) {
+	   //LY = -1;
+	   LY = 0;
+  } else {
+	  LY = 0;
+  }
+  int YC;
+  if ( ( dt.year >= 1900 ) && ( dt.year <= 2000 ) ) {
+	  YC = ((dt.year - 1900) / 4 + (dt.year - 1900)) % 7;
+  } else if ( ( dt.year >= 2000 ) && ( dt.year <= 2100 ) ) {
+	   YC = ((dt.year - 2000) / 4 + (dt.year - 2000)) % 7;
+  } else if ( ( dt.year >= 2100 ) && ( dt.year <= 2200 ) ) {
+	   YC = ((dt.year - 2100) / 4 + (dt.year - 2100)) % 7;
+  } else if ( ( dt.year >= 2200 ) && ( dt.year <= 2300 ) ) {
+	   YC = ((dt.year - 2200) / 4 + (dt.year - 2200)) % 7;
+  } else if ( ( dt.year >= 1800 ) && ( dt.year <= 1900 ) ) {
+	   YC = ((dt.year - 1800) / 4 + (dt.year - 1800)) % 7;
+  } else if ( ( dt.year >= 2300 ) && ( dt.year <= 2400 ) ) {
+	   YC = ((dt.year - 2300) / 4 + (dt.year - 2300)) % 7;
+  }
+  //Cho tháng 3
+  for (int i = 25; i < 32 ; i++){
+		if ( (3 + CC + LY + YC + i)% 7 == 0 ){ //Số 3 ở đầu là đại diện cho tháng
+			GE3 = i ;
+		} 
+	}
+	//Cho tháng 10
+	 for (int z = 25; z < 32 ; z++){
+		if ( (0 + CC + LY + YC + z)% 7 == 0 ){
+			GE10 = z ;
+		} 
+	
+	}
   char clock_time_GE[8]; 			//	текст время		12:34
            //Có phải trong tháng 3 đến tháng 10 không? Không thì sao: Đã làm
-			 if ( ( dt.month >= 3) && ( dt.month <= 10) ) {
-				 //Xét tháng 3 trước
-                  if ( dt.month == 3){
-					  //Xét trong tuần cuối cùng? Còn lại thì sao: Đã làm
-					  if ( ( dt.day <= 31) && ( dt.day >= 25) ){
- 	                     if ( dt.weekday == 8){
-							 GE3 = dt.day;
+			 
+				 //Xét tháng 3 trước		  
+ 	                     if (( dt.month == 3) && ( dt.day == GE3)){
 					//Xét riêng trong ngày chủ nhật lúc 1h sáng mới thay đổi đồng hồ
 								if ( dt.hour - 6 >= 1){ // Giờ ở Đức từ 1h sáng chủ nhật là cộng thêm 1h
 									_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 1, dt.min); 
@@ -2946,35 +3030,28 @@ repaint_screen_lines(0, 176);
 									}
 									}
 					//Xét các ngày sau ngày chủ nhật trong tuần cuối đó (Bị thay đổi giống ngày chủ nhật: +1h)
-						else if ( dt.day > GE3) {
+					if (( dt.month == 3) && ( dt.day > GE3)){
 							if (dt.hour - 6 + 1 < 0) {
 								 _sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24 + 1, dt.min);
 								}
 							else {
 								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 1, dt.min);
 								}
-								}
+					}
 					//Còn lại không thuộc 2 trường hợp trên là (Trước ngày chủ nhật)
-						else if (dt.hour - 6 < 0) {
+						if (( dt.month == 3) && ( dt.day < GE3)){
+						if (dt.hour - 6 < 0) {
 								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24, dt.min);
 							}
 							else {
 								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6, dt.min);
 								}
-								} //Hết xét tuần cuối cùng
-						else if (dt.hour - 6 < 0) {
-								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24, dt.min);
-								}
-							else {
-								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6, dt.min);
-								}
-					} // Dấu kết cho tháng 3
+						}
+					 // Dấu kết cho tháng 3
 				//Xét đến tháng 10
-                  if ( dt.month == 10){
+       
 					  //Xét trong tuần cuối cùng? Còn lại thì sao: Đã làm
-					  if ( ( dt.day <= 31) && ( dt.day >= 25) ){
- 	                     if ( dt.weekday == 8){
-							 GE10 = dt.day;
+ 	                    if (( dt.month == 10) && ( dt.day == GE10)){
 					//Xét riêng trong ngày chủ nhật lúc 2h sáng mới thay đổi đồng hồ
 								if ( dt.hour - 6 + 1 >= 2){ // Giờ ở Đức từ 2h sáng chủ nhật là về lại bình thường
 									_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6, dt.min); 
@@ -2988,7 +3065,7 @@ repaint_screen_lines(0, 176);
 									}
 									}
 					//Xét các ngày sau ngày chủ nhật trong tuần cuối đó (Bị thay đổi giống ngày chủ nhật: +1h)
-						else if ( dt.day > GE10) {
+						if (( dt.month == 10) && ( dt.day > GE10)){
 							if (dt.hour - 6 < 0) {
 								 _sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24, dt.min);
 								}
@@ -2997,34 +3074,32 @@ repaint_screen_lines(0, 176);
 								}
 								}
 					//Còn lại không thuộc 2 trường hợp trên là (Trước ngày chủ nhật)
-						else if (dt.hour - 6 + 1 < 0) {
+						if (( dt.month == 10) && ( dt.day < GE10)){
+							if (dt.hour - 6 + 1 < 0) {
 								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24 + 1, dt.min);
 							}
 							else {
 								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 1, dt.min);
 								}
 								} //Hết xét tuần cuối cùng
-						else if (dt.hour - 6 + 1 < 0) {
-								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24 + 1, dt.min);
-								}
-							else {
-								_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 1, dt.min);
-								}
-					} // Dấu kết cho tháng 10														  
+						 // Dấu kết cho tháng 10														  
 				//Xét các tháng còn lại trong khoảng từ tháng 3 đến tháng 10
-					else if (dt.hour - 6 + 1 < 0) {
+					if ( ( dt.month >= 4) && ( dt.month <= 9) ) {
+						if (dt.hour - 6 + 1 < 0) {
 							_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24 + 1, dt.min);
 						}
 						else {
 							_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 1, dt.min);
 						}
 			} //Hết cho tháng 3 và tháng 10
-			else if (dt.hour - 6 < 0) {
+			if ( ( dt.month >= 11) || ( dt.month <= 2) ){
+				if (dt.hour - 6 < 0) {
 					_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6 + 24, dt.min);
 					}
 				else {
 					_sprintf(clock_time_GE, "%02d:%02d", dt.hour - 6, dt.min);
 					}
+			}
 			 
 		//text_out_center(clock_time, 125, 163); // печатаем результат(время) большими цифрами
 		text_out_font(11, clock_time_GE, 38 , 104, 1); // text_out_font(Kiểu font chữ, Char (Ở đây là Clock_time roi), x , y, Khoảng cách)
@@ -3060,17 +3135,27 @@ repaint_screen_lines(0, 176);
   US3 = 31;
    int US10;
   US10 = 31;
+    //Cho tháng 3
+  for (int v = 8; v < 15 ; v++){
+		if ( (3 + CC + LY + YC + v)% 7 == 0 ){ //Số 3 ở đầu là đại diện cho tháng
+			US3 = v ;
+		} 
+	}
+	//Cho tháng 10
+	 for (int b = 1; b < 8 ; b++){
+		if ( (3 + CC + LY + YC + b)% 7 == 0 ){
+			US10 = b ;
+		} 
+	}
   char clock_time_US[8]; 			//	текст время		12:34
            //Có phải trong tháng 3 đến tháng 11 không? Không thì sao: Đã làm
 		   //-	Bắt đầu: Ngày chủ nhật thứ 2 của tháng 3 (8 =< x =< 8+6) lúc 2h sáng: Tăng thêm 1h --> Giờ VN -14
 			//-	Kết thúc: Ngày chủ nhật thứ 1 của tháng  11 (1 =< x =< 7) lúc 2h
-			 if ( ( dt.month >= 3) && ( dt.month <= 11) ) {
+			
 				 //Xét tháng 3 trước
-                  if ( dt.month == 3){
-					  //Xét trong tuần cuối cùng? Còn lại thì sao: Đã làm
-					  if ( ( dt.day <= 14) && ( dt.day >= 8) ){
- 	                     if ( dt.weekday == 8){
-							 US3 = dt.day;
+					  //Xét trong tuần cuối cùng? Còn lại thì sao: Đã làm 
+ 	                   if (( dt.month == 3) && ( dt.day == US3)){
+							 
 					//Xét riêng trong ngày chủ nhật lúc 1h sáng mới thay đổi đồng hồ
 								if ( dt.hour - 15 >= 2){ // Giờ ở USA từ 2h sáng chủ nhật là cộng thêm 1h
 									_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 1, dt.min); 
@@ -3084,7 +3169,7 @@ repaint_screen_lines(0, 176);
 									}
 									}
 					//Xét các ngày sau ngày chủ nhật trong tuần cuối đó (Bị thay đổi giống ngày chủ nhật: +1h)
-						else if ( dt.day > US3) {
+						if (( dt.month == 3) && ( dt.day > US3)){
 							if (dt.hour - 15 + 1 < 0) {
 								 _sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24 + 1, dt.min);
 								}
@@ -3093,26 +3178,19 @@ repaint_screen_lines(0, 176);
 								}
 								}
 					//Còn lại không thuộc 2 trường hợp trên là (Trước ngày chủ nhật)
-						else if (dt.hour - 15 < 0) {
+						if (( dt.month == 3) && ( dt.day < US3)){
+							if (dt.hour - 15 < 0) {
 								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24, dt.min);
 							}
 							else {
 								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15, dt.min);
 								}
 								} //Hết xét tuần cuối cùng
-						else if (dt.hour - 15 < 0) {
-								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24, dt.min);
-								}
-							else {
-								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15, dt.min);
-								}
-					} // Dấu kết cho tháng 3
+						 // Dấu kết cho tháng 3
 				//Xét đến tháng 11
-                  if ( dt.month == 11){
+                 
 					  //Xét trong tuần cuối cùng? Còn lại thì sao: Đã làm
-					  if ( ( dt.day <= 7) && ( dt.day >= 1) ){
- 	                     if ( dt.weekday == 8){
-							 US10 = dt.day;
+					 if (( dt.month == 11) && ( dt.day == US10)){
 					//Xét riêng trong ngày chủ nhật lúc 2h sáng mới thay đổi đồng hồ
 								if ( dt.hour - 15 + 1 >= 2){ // Giờ ở Đức từ 2h sáng chủ nhật là về lại bình thường
 									_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15, dt.min); 
@@ -3126,7 +3204,7 @@ repaint_screen_lines(0, 176);
 									}
 									}
 					//Xét các ngày sau ngày chủ nhật trong tuần cuối đó (Bị thay đổi giống ngày chủ nhật: +1h)
-						else if ( dt.day > US10) {
+						if (( dt.month == 11) && ( dt.day > US10)){
 							if (dt.hour - 15 < 0) {
 								 _sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24, dt.min);
 								}
@@ -3135,35 +3213,32 @@ repaint_screen_lines(0, 176);
 								}
 								}
 					//Còn lại không thuộc 2 trường hợp trên là (Trước ngày chủ nhật)
-						else if (dt.hour - 15 + 1 < 0) {
+						if (( dt.month == 11) && ( dt.day < US10)){
+							if (dt.hour - 15 + 1 < 0) {
 								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24 + 1, dt.min);
 							}
 							else {
 								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 1, dt.min);
 								}
 								} //Hết xét tuần cuối cùng
-						else if (dt.hour - 15 + 1 < 0) {
-								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24 + 1, dt.min);
-								}
-							else {
-								_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 1, dt.min);
-								}
-					} // Dấu kết cho tháng 10														  
+					 // Dấu kết cho tháng 11														  
 				//Xét các tháng còn lại trong khoảng từ tháng 3 đến tháng 10
-					else if (dt.hour - 15 + 1 < 0) {
+					 if ( ( dt.month >= 4) && ( dt.month <= 10) ) {
+						 if (dt.hour - 15 + 1 < 0) {
 							_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24 + 1, dt.min);
 						}
 						else {
 							_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 1, dt.min);
 						}
-			} //Hết cho tháng 3 và tháng 10
-			else if (dt.hour - 15 < 0) {
+			} //Hết cho tháng 3 và tháng 11
+			if ( ( dt.month >= 12) || ( dt.month <= 2) ){
+				if (dt.hour - 15 < 0) {
 					_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15 + 24, dt.min);
 					}
 				else {
 					_sprintf(clock_time_US, "%02d:%02d", dt.hour - 15, dt.min);
 					}   
-	  
+			}
 		//text_out_center(clock_time, 125, 163); // печатаем результат(время) большими цифрами
 		text_out_font(11, clock_time_US, 38 , 147, 1); // text_out_font(Kiểu font chữ, Char (Ở đây là Clock_time roi), x , y, Khoảng cách)
 		repaint_screen_lines(0, 176); 
@@ -3179,15 +3254,24 @@ repaint_screen_lines(0, 176);
   GB3 = 31;
    int GB10;
   GB10 = 31;
+    //Cho tháng 3
+  for (int x = 25; x < 32 ; x++){
+		if ( (3 + CC + LY + YC + x)% 7 == 0 ){ //Số 3 ở đầu là đại diện cho tháng
+			GB3 = x ;
+		} 
+	}
+	//Cho tháng 10
+	 for (int c = 25; c < 32 ; c++){
+		if ( (0 + CC + LY + YC + c)% 7 == 0 ){
+			GB10 = c ;
+		} 
+	}
   char clock_time_GB[8]; 			//	текст время		12:34
            //Có phải trong tháng 3 đến tháng 10 không? Không thì sao: Đã làm
-			 if ( ( dt.month >= 3) && ( dt.month <= 10) ) {
 				 //Xét tháng 3 trước
-                  if ( dt.month == 3){
+                  
 					  //Xét trong tuần cuối cùng? Còn lại thì sao: Đã làm
-					  if ( ( dt.day <= 31) && ( dt.day >= 25) ){
- 	                     if ( dt.weekday == 8){
-							 GB3 = dt.day;
+					  if (( dt.month == 3) && ( dt.day == GB3)){
 					//Xét riêng trong ngày chủ nhật lúc 1h sáng mới thay đổi đồng hồ
 								if ( dt.hour - 7 >= 1){ // Giờ ở Đức từ 1h sáng chủ nhật là cộng thêm 1h
 									_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 1, dt.min); 
@@ -3201,7 +3285,7 @@ repaint_screen_lines(0, 176);
 									}
 									}
 					//Xét các ngày sau ngày chủ nhật trong tuần cuối đó (Bị thay đổi giống ngày chủ nhật: +1h)
-						else if ( dt.day > GB3) {
+						if (( dt.month == 3) && ( dt.day > GB3)){
 							if (dt.hour - 7 + 1 < 0) {
 								 _sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24 + 1, dt.min);
 								}
@@ -3210,26 +3294,19 @@ repaint_screen_lines(0, 176);
 								}
 								}
 					//Còn lại không thuộc 2 trường hợp trên là (Trước ngày chủ nhật)
-						else if (dt.hour - 7 < 0) {
+						if (( dt.month == 3) && ( dt.day < GB3)){
+							if (dt.hour - 7 < 0) {
 								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24, dt.min);
 							}
 							else {
 								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7, dt.min);
 								}
 								} //Hết xét tuần cuối cùng
-						else if (dt.hour - 7 < 0) {
-								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24, dt.min);
-								}
-							else {
-								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7, dt.min);
-								}
-					} // Dấu kết cho tháng 3
+						 // Dấu kết cho tháng 3
 				//Xét đến tháng 10
-                  if ( dt.month == 10){
+                
 					  //Xét trong tuần cuối cùng? Còn lại thì sao: Đã làm
-					  if ( ( dt.day <= 31) && ( dt.day >= 25) ){
- 	                     if ( dt.weekday == 8){
-							 GB10 = dt.day;
+					 if (( dt.month == 10) && ( dt.day == GB10)){
 					//Xét riêng trong ngày chủ nhật lúc 2h sáng mới thay đổi đồng hồ
 								if ( dt.hour - 7 + 1 >= 2){ // Giờ ở Đức từ 2h sáng chủ nhật là về lại bình thường
 									_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7, dt.min); 
@@ -3243,7 +3320,7 @@ repaint_screen_lines(0, 176);
 									}
 									}
 					//Xét các ngày sau ngày chủ nhật trong tuần cuối đó (Bị thay đổi giống ngày chủ nhật: +1h)
-						else if ( dt.day > GB10) {
+						if (( dt.month == 10) && ( dt.day > GB10)){
 							if (dt.hour - 7 < 0) {
 								 _sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24, dt.min);
 								}
@@ -3252,35 +3329,32 @@ repaint_screen_lines(0, 176);
 								}
 								}
 					//Còn lại không thuộc 2 trường hợp trên là (Trước ngày chủ nhật)
-						else if (dt.hour - 7 + 1 < 0) {
+						if (( dt.month == 10) && ( dt.day < GB10)){
+							if (dt.hour - 7 + 1 < 0) {
 								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24 + 1, dt.min);
 							}
 							else {
 								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 1, dt.min);
 								}
 								} //Hết xét tuần cuối cùng
-						else if (dt.hour - 7 + 1 < 0) {
-								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24 + 1, dt.min);
-								}
-							else {
-								_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 1, dt.min);
-								}
-					} // Dấu kết cho tháng 10														  
+						 // Dấu kết cho tháng 10														  
 				//Xét các tháng còn lại trong khoảng từ tháng 3 đến tháng 10
-					else if (dt.hour - 7 + 1 < 0) {
+					if ( ( dt.month >= 4) && ( dt.month <= 9) ) {
+						if (dt.hour - 7 + 1 < 0) {
 							_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24 + 1, dt.min);
 						}
 						else {
 							_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 1, dt.min);
 						}
 			} //Hết cho tháng 3 và tháng 10
-			else if (dt.hour - 7 < 0) {
+			if ( ( dt.month >= 11) || ( dt.month <= 2) ){
+				if (dt.hour - 7 < 0) {
 					_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7 + 24, dt.min);
 					}
 				else {
 					_sprintf(clock_time_GB, "%02d:%02d", dt.hour - 7, dt.min);
 					}
-
+			}
 
 		//text_out_center(clock_time, 125, 163); // печатаем результат(время) большими цифрами
 		text_out_font(11, clock_time_GB, 125 , 147, 1); // text_out_font(Kiểu font chữ, Char (Ở đây là Clock_time roi), x , y, Khoảng cách)
